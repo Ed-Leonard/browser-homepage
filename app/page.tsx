@@ -46,6 +46,7 @@ export default function Home() {
 					key={i}
 					{...nodeEntry}
 					onClick={() => bringToFront(i)}
+					onChange={newProps => updateNodeProps(i, newProps)}
 				/>
 			))}
 			<TaskBar nodes={nodes} />

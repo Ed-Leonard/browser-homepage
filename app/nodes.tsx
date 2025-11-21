@@ -53,16 +53,18 @@ export default function DraggableBox<P extends AnyProps>({ className, node, prop
 	const [showSettings, setShowSettings] = useState(false)
 
 	return (
-		<Draggable nodeRef={nodeRef} handle='.header' bounds='parent' cancel=".settings, input, button">
-			<div ref={nodeRef} className={`window group absolute ${className}`}
-				style={{ zIndex: z }}>
-				<div className='header opacity-0 pb-1 px-1 group-hover:opacity-100 transition-opacity flex justify-between' style={{ cursor: 'move' }} onMouseDown={onClick}>
+		<Draggable nodeRef={nodeRef} handle='.header' bounds='parent' onMouseDown={onClick}>
+			<div
+				ref={nodeRef}
+				className={`window group absolute ${className}`}
+				style={{ zIndex: z }} >
+				<div
+					className='header opacity-0 pb-1 px-1 group-hover:opacity-100 transition-opacity flex justify-between'
+					style={{ cursor: 'move' }} >
 					<button onClick={() => setShowSettings(!showSettings)} >settings</button>
 					<button>x</button>
 				</div>
-				<div onMouseDown={onClick}>
-					<Node {...props} />
-				</div>
+				<Node {...props} />
 				{showSettings && (
 					<div className='settings p-2 text-white mt-2 rounded noselect'>
 						{'showSeconds' in props && (
