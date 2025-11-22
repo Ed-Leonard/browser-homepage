@@ -40,7 +40,7 @@ export default function Home() {
 	};
 
 	return (
-		<div className='relative min-h-screen font-sans overflow-hidden bg-[#282828]'>
+		<div className='relative min-h-screen overflow-hidden bg-[#282828]'>
 			{nodes.map((nodeEntry, i) => (
 				<DraggableBox
 					key={i}
