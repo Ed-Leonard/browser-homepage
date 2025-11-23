@@ -79,24 +79,22 @@ export default function DraggableBox<P extends AnyProps>({ className, node, prop
 
 			{showSettings && createPortal(
 				<div
-					className='settings absolute top-1/2 left-1/2 p-4 bg-[#1d2021] rounded-lg shadow-lg z-500 flex-col justify-between'
+					className='settings absolute top-1/2 left-1/2 p-4 bg-[#1d2021] rounded-lg shadow-lg z-500 text-center flex-col'
 					style={{ transform: 'translate(-50%, -50%)' }}
+					onMouseDown={e => e.stopPropagation()} // prevent click-through
 				>
 					{Object.entries(toggleFields).map(([key, label]) =>
 						key in props ? (
-							<label
-								key={key}
-								className="flex justify-between items-center w-full cursor-pointer p-2 m-2 bg-[#3c3836] rounded-sm"
-							>
+							<label key={key} className="block cursor-pointer">
 								<input
 									type="checkbox"
 									checked={props[key]}
 									onChange={(e) =>
 										onChange?.({ [key]: e.target.checked } as any as Partial<P>)
 									}
-									className="cursor-pointer mr-32"
+									className="cursor-pointer"
 								/>
-								<span className="text-lg">{label}</span>
+								{label}
 							</label>
 						) : null
 					)}					<button className="mt-2 px-2 py-1 rounded cursor-pointer" onClick={() => setShowSettings(false)} >Close</button>

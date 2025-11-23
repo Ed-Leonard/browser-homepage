@@ -15,8 +15,8 @@ export type NodeEntry<P extends AnyProps = AnyProps> = {
 
 export default function Home() {
 	const [nodes, setNodes] = useState<NodeEntry<any>[]>([
-		{ node: Clock, className: 'top-10 left-10', props: { showSeconds: true, use24Hour: false }, z: 1 },
-		{ node: Clock, className: 'top-20 left-20', props: { showSeconds: true, use24Hour: false }, z: 2 }
+		{ node: Clock, className: 'top-10 left-10', props: { showSeconds: true, use24Hour: false, border: true, background: true }, z: 1 },
+		{ node: Clock, className: 'top-20 left-20', props: { showSeconds: true, use24Hour: false, border: true, background: true }, z: 2 }
 	]);
 
 	const [highestZ, setHighestZ] = useState(10);

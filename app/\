@@ -86,7 +86,7 @@ export default function DraggableBox<P extends AnyProps>({ className, node, prop
 						key in props ? (
 							<label
 								key={key}
-								className="flex justify-between items-center w-full cursor-pointer p-2 m-2 bg-[#3c3836] rounded-sm"
+								className="flex justify-between items-center w-full cursor-pointer py-1"
 							>
 								<input
 									type="checkbox"
@@ -94,7 +94,7 @@ export default function DraggableBox<P extends AnyProps>({ className, node, prop
 									onChange={(e) =>
 										onChange?.({ [key]: e.target.checked } as any as Partial<P>)
 									}
-									className="cursor-pointer mr-32"
+									className="cursor-pointer mr-16"
 								/>
 								<span className="text-lg">{label}</span>
 							</label>
