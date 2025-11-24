@@ -95,28 +95,26 @@ export default function DraggableBox<P extends AnyProps>({ className, node, prop
 					},
 				}}
 			>
-				<Draggable nodeRef={nodeRef}>
-					<div className='bg-[#1d2021] p-4 text-[#ebdbb2] rounded-lg border cursor-move'>
-						{Object.entries(toggleFields).map(([key, label]) =>
-							key in props ? (
-								<label
-									key={key}
-									className="flex justify-between items-center w-full cursor-pointer p-2 border-b rounded-bl-lg hover:bg-[#282828]"
-								>
-									<input
-										type="checkbox"
-										checked={props[key]}
-										onChange={(e) =>
-											onChange?.({ [key]: e.target.checked } as any as Partial<P>)
-										}
-										className="cursor-pointer mr-32 bg-[#282828] border rounded-full size-2 appearance-none checked:bg-[#ebdbb2] checked: transition-all duration-75"
-									/>
-									<span className="text-lg noselect">{label}</span>
-								</label>
-							) : null
-						)}
-					</div>
-				</Draggable>
+				<div className='bg-[#1d2021] p-4 text-[#ebdbb2] rounded-lg border'>
+					{Object.entries(toggleFields).map(([key, label]) =>
+						key in props ? (
+							<label
+								key={key}
+								className="flex justify-between items-center w-full cursor-pointer p-2 border-b hover:bg-[#282828] checked:size-2"
+							>
+								<input
+									type="checkbox"
+									checked={props[key]}
+									onChange={(e) =>
+										onChange?.({ [key]: e.target.checked } as any as Partial<P>)
+									}
+									className="cursor-pointer mr-32 bg-[#282828] border rounded-full size-2 appearance-none checked:bg-[#ebdbb2] transition-all duration-75"
+								/>
+								<span className="text-lg noselect">{label}</span>
+							</label>
+						) : null
+					)}
+				</div>
 			</Dialog>
 		</>
 	);

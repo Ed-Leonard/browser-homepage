@@ -10,13 +10,13 @@ export type NodeEntry<P extends AnyProps = AnyProps> = {
 	className: string;
 	props: P;
 	z: number;
+	showing: boolean;
 	onChange?: (newProps: Partial<P>) => void;
 };
 
 export default function Home() {
 	const [nodes, setNodes] = useState<NodeEntry<any>[]>([
-		{ node: Clock, className: 'top-10 left-10', props: { showSeconds: true, use24Hour: false, border: true, background: true }, z: 1 },
-		{ node: Clock, className: 'top-20 left-20', props: { showSeconds: true, use24Hour: false, border: true, background: true }, z: 2 }
+		{ node: Clock, className: 'top-10 left-10', props: { showSeconds: true, use24Hour: false, border: true, background: true }, z: 1, showing: true },
 	]);
 
 	const [highestZ, setHighestZ] = useState(10);
@@ -42,14 +42,14 @@ export default function Home() {
 	return (
 		<div className='relative min-h-screen overflow-hidden bg-[#282828]'>
 			{nodes.map((nodeEntry, i) => (
-				<DraggableBox
+				(nodeEntry.showing ? <DraggableBox
 					key={i}
 					{...nodeEntry}
 					onClick={() => bringToFront(i)}
 					onChange={newProps => updateNodeProps(i, newProps)}
-				/>
+				/> : null)
 			))}
-			<TaskBar nodes={nodes} />
+			<TaskBar nodes={nodes} setNodes={setNodes} />
 		</div>
 	);
 }

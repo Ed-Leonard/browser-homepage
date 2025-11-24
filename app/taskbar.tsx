@@ -1,11 +1,23 @@
 import { NodeEntry } from "./page";
 
-export default function TaskBar({ nodes }: { nodes: NodeEntry[] }) {
+export default function TaskBar({ nodes, setNodes }: { nodes: NodeEntry[], setNodes: React.Dispatch<React.SetStateAction<NodeEntry[]>> }) {
+
+	const onClick = (nodeType: any) => {
+		setNodes(prev =>
+			prev.map(n =>
+				n.node === nodeType
+					? { ...n, showing: !n.showing }
+					: n
+			)
+		);
+	}
+
 	return (
 		<div className='absolute group bottom-0 w-full'>
-			<div className='h-8 z-20'></div>
-			<div className='p-4 text-center transform transition-all duration-300 translate-y-1/1 group-hover:translate-y-0'>
-				Taskbar content
+			<div className='p-4 transform transition-all duration-300 translate-y-1/1 group-hover:translate-y-0 flex flex-row justify-center space-x-4'>
+				{nodes.map((entry, index) =>
+					<button key={index} className='cursor-pointer' onClick={() => onClick(entry.node)}>clock</button>
+				)}
 			</div>
 		</div>
 	)
