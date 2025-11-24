@@ -49,7 +49,7 @@ export function Clock({ showSeconds = true, use24Hour = false, border = false, b
 	);
 }
 
-export default function DraggableBox<P extends AnyProps>({ className, node, props, onChange, onClick, z }: NodeEntry<P> & { onClick: () => void }) {
+export default function DraggableBox<P extends AnyProps>({ className, node, props, onChange, onClick, z, setNodes }: NodeEntry<P> & { onClick: () => void, setNodes: React.Dispatch<React.SetStateAction<NodeEntry[]>> }) {
 	const nodeRef = useRef(null);
 	const Node = node;
 	const [showSettings, setShowSettings] = useState(false);
@@ -60,6 +60,16 @@ export default function DraggableBox<P extends AnyProps>({ className, node, prop
 		border: "Border",
 		background: "Background",
 	};
+
+	const onClose = (nodeType: any) => {
+		setNodes(prev =>
+			prev.map(n =>
+				n.node === nodeType
+					? { ...n, showing: !n.showing }
+					: n
+			)
+		);
+	}
 
 	return (
 		<>
@@ -72,7 +82,7 @@ export default function DraggableBox<P extends AnyProps>({ className, node, prop
 						className='header opacity-0 pb-1 px-1 group-hover:opacity-100 transition-opacity flex justify-between cursor-move'
 					>
 						<button onClick={() => setShowSettings(!showSettings)} className='cursor-pointer' >settings</button>
-						<button className='cursor-pointer'>x</button>
+						<button className='cursor-pointer' onClick={() => onClose(node)}>x</button>
 					</div>
 					<Node {...props} />
 				</div>
