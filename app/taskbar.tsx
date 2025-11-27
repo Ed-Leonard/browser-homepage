@@ -1,8 +1,8 @@
-import { NodeEntry } from "./page";
+import { NodeEntry } from "./componentMap";
 
 export default function TaskBar({ nodes, setNodes }: { nodes: NodeEntry[], setNodes: React.Dispatch<React.SetStateAction<NodeEntry[]>> }) {
 
-	const onClick = (nodeType: any) => {
+	const onClick = (nodeType: React.ComponentType<any>) => {
 		setNodes(prev =>
 			prev.map(n =>
 				n.node === nodeType

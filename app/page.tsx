@@ -1,27 +1,27 @@
 'use client'
 
 import DraggableBox from './nodes'
-import { Clock, AnyProps } from './nodes'
+import { AnyProps, Clock } from './nodes'
 import TaskBar from './taskbar'
 import { useState } from 'react'
-
-export type NodeEntry<P extends AnyProps = AnyProps> = {
-	node: React.ComponentType<P>;
-	className: string;
-	props: P;
-	z: number;
-	showing: boolean;
-	onChange?: (newProps: Partial<P>) => void;
-};
+import { componentMap, NodeEntry } from './componentMap'
 
 export default function Home() {
-	const [nodes, setNodes] = useState<NodeEntry<any>[]>([
-		{ node: Clock, className: 'top-10 left-10', props: { showSeconds: true, use24Hour: false, border: true, background: true }, z: 1, showing: true },
+	const [nodes, setNodes] = useState<NodeEntry[]>([
+		{
+			nodeName: 'Clock',
+			node: Clock,
+			props: { showSeconds: true, use24Hour: false, border: true, background: true },
+			x: 100,
+			y: 100,
+			z: 1,
+			showing: true,
+		},
 	]);
 
 	const [highestZ, setHighestZ] = useState(10);
 
-	const updateNodeProps = (index: number, newProps: any) => {
+	const updateNodeProps = (index: number, newProps: Partial<AnyProps>) => {
 		setNodes(prev =>
 			prev.map((n, i) =>
 				i === index ? { ...n, props: { ...n.props, ...newProps } } : n
@@ -39,17 +39,24 @@ export default function Home() {
 		console.log(highestZ);
 	};
 
+	const resolvedNodes = nodes.map(n => ({
+		...n,
+		node: componentMap[n.nodeName],
+	}));
+
 	return (
 		<div className='relative min-h-screen overflow-hidden bg-[#282828]'>
-			{nodes.map((nodeEntry, i) => (
-				(nodeEntry.showing ? <DraggableBox
-					key={i}
-					{...nodeEntry}
-					onClick={() => bringToFront(i)}
-					onChange={newProps => updateNodeProps(i, newProps)}
-					setNodes={setNodes}
-				/> : null)
-			))}
+			{resolvedNodes.map((nodeEntry, i) =>
+				nodeEntry.showing ? (
+					<DraggableBox
+						key={i}
+						{...nodeEntry}
+						onClick={() => bringToFront(i)}
+						onChange={newProps => updateNodeProps(i, newProps)}
+						setNodes={setNodes}
+					/>
+				) : null
+			)}
 			<TaskBar nodes={nodes} setNodes={setNodes} />
 		</div>
 	);

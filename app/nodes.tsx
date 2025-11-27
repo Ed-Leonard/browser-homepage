@@ -1,12 +1,15 @@
 'use client';
 
 import Draggable from 'react-draggable';
-import { NodeEntry } from './page';
+import { NodeEntry } from './componentMap';
 import { useRef, useState, useEffect } from 'react';
-import { createPortal } from "react-dom";
 import Dialog from '@mui/material/Dialog';
 
-export type AnyProps = Record<string, any>;
+export type AnyProps = {
+	border?: boolean;
+	background?: boolean;
+	[key: string]: any;
+};
 
 export function Clock({ showSeconds = true, use24Hour = false, border = false, background = false }: AnyProps) {
 	const [time, setTime] = useState("");
@@ -49,7 +52,7 @@ export function Clock({ showSeconds = true, use24Hour = false, border = false, b
 	);
 }
 
-export default function DraggableBox<P extends AnyProps>({ className, node, props, onChange, onClick, z, setNodes }: NodeEntry<P> & { onClick: () => void, setNodes: React.Dispatch<React.SetStateAction<NodeEntry[]>> }) {
+export default function DraggableBox<P extends AnyProps>({ nodeName, node, props, onChange, onClick, x, y, z, setNodes }: NodeEntry<P> & { onClick: () => void, setNodes: React.Dispatch<React.SetStateAction<NodeEntry[]>> }) {
 	const nodeRef = useRef(null);
 	const Node = node;
 	const [showSettings, setShowSettings] = useState(false);
@@ -61,22 +64,28 @@ export default function DraggableBox<P extends AnyProps>({ className, node, prop
 		background: "Background",
 	};
 
-	const onClose = (nodeType: any) => {
+	const onClose = (nodeType: Partial<AnyProps>) => {
 		setNodes(prev =>
 			prev.map(n =>
-				n.node === nodeType
-					? { ...n, showing: !n.showing }
-					: n
-			)
+				n.node === nodeType ? { ...n, showing: !n.showing } : n)
 		);
 	}
 
 	return (
 		<>
-			<Draggable nodeRef={nodeRef} handle='.header' bounds='parent' onMouseDown={onClick}>
+			<Draggable nodeRef={nodeRef} handle='.header' bounds='parent' onMouseDown={onClick} position={{ x, y }}
+				onStop={(_, data) => {
+					setNodes(prev =>
+						prev.map(n =>
+							n.nodeName === nodeName
+								? { ...n, x: data.x, y: data.y }
+								: n
+						)
+					);
+				}}>
 				<div
 					ref={nodeRef}
-					className={`window group absolute  ${className}`}
+					className={`window group absolute`}
 					style={{ zIndex: z }} >
 					<div
 						className='header opacity-0 pb-1 px-1 group-hover:opacity-100 transition-opacity flex justify-between cursor-move'
@@ -117,7 +126,7 @@ export default function DraggableBox<P extends AnyProps>({ className, node, prop
 										type="checkbox"
 										checked={props[key]}
 										onChange={(e) =>
-											onChange?.({ [key]: e.target.checked } as any as Partial<P>)
+											onChange?.({ [key]: e.target.checked } as Partial<P>)
 										}
 										className="cursor-pointer mr-32 bg-[#282828] border rounded-full size-2 appearance-none checked:bg-[#ebdbb2] checked: transition-all duration-75"
 									/>
