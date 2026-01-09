@@ -1,7 +1,7 @@
 'use client';
 
 import Draggable from 'react-draggable';
-import { NodeEntry } from './componentMap';
+import { NodeEntry, NodeEntryGeneric, NodePropsMap } from './componentMap';
 import { useRef, useState, useEffect } from 'react';
 import Dialog from '@mui/material/Dialog';
 
@@ -52,7 +52,7 @@ export function Clock({ showSeconds = true, use24Hour = false, border = false, b
 	);
 }
 
-export default function DraggableBox<P extends AnyProps>({ nodeName, node, props, onChange, onClick, x, y, z, setNodes }: NodeEntry<P> & { onClick: () => void, setNodes: React.Dispatch<React.SetStateAction<NodeEntry[]>> }) {
+export default function DraggableBox<K extends keyof NodePropsMap>({ nodeName, node, props, onChange, onClick, x, y, z, setNodes }: NodeEntryGeneric<K> & { onClick: () => void, setNodes: React.Dispatch<React.SetStateAction<NodeEntry[]>> }) {
 	const nodeRef = useRef(null);
 	const Node = node;
 	const [showSettings, setShowSettings] = useState(false);
@@ -65,8 +65,8 @@ export default function DraggableBox<P extends AnyProps>({ nodeName, node, props
 	};
 
 	const onClose = (nodeType: Partial<AnyProps>) => {
-		setNodes(prev =>
-			prev.map(n =>
+		setNodes((prev: NodeEntry[]) =>
+			prev.map((n: NodeEntry) =>
 				n.node === nodeType ? { ...n, showing: !n.showing } : n)
 		);
 	}
@@ -75,7 +75,7 @@ export default function DraggableBox<P extends AnyProps>({ nodeName, node, props
 		<>
 			<Draggable nodeRef={nodeRef} handle='.header' bounds='parent' onMouseDown={onClick} position={{ x, y }}
 				onStop={(_, data) => {
-					setNodes(prev =>
+					setNodes((prev: NodeEntry[]) =>
 						prev.map(n =>
 							n.nodeName === nodeName
 								? { ...n, x: data.x, y: data.y }
@@ -102,31 +102,31 @@ export default function DraggableBox<P extends AnyProps>({ nodeName, node, props
 				onClose={() => setShowSettings(false)}
 				BackdropProps={{
 					sx: {
-						backgroundColor: "transparent",
+						backgroundColor: 'rgba(0, 0, 0, 0.5)',
 					},
 				}}
 				PaperProps={{
 					sx: {
-						backgroundColor: "transparent",
-						boxShadow: "none",
-						p: 0,
-						overflow: "visible",
+						boxShadow: 'none',
+						overflow: 'visible',
+						backgroundColor: 'transparent',
+						p: 2,
 					},
 				}}
 			>
 				<Draggable nodeRef={nodeRef}>
-					<div className='bg-[#1d2021] p-4 text-[#ebdbb2] rounded-lg border cursor-move'>
+					<div className='bg-[#282828] p-4 text-[#ebdbb2] rounded-lg border cursor-move'>
 						{Object.entries(toggleFields).map(([key, label]) =>
 							key in props ? (
 								<label
 									key={key}
-									className="flex justify-between items-center w-full cursor-pointer p-2 border-b rounded-bl-lg hover:bg-[#282828]"
+									className="flex justify-between items-center w-full cursor-pointer p-2 border-b rounded-bl-lg hover:bg-[#1d2021]"
 								>
 									<input
 										type="checkbox"
-										checked={props[key]}
+										checked={Boolean(props[key as keyof NodePropsMap[K]])}
 										onChange={(e) =>
-											onChange?.({ [key]: e.target.checked } as Partial<P>)
+											onChange?.({ [key]: e.target.checked } as Partial<NodePropsMap[K]>)
 										}
 										className="cursor-pointer mr-32 bg-[#282828] border rounded-full size-2 appearance-none checked:bg-[#ebdbb2] checked: transition-all duration-75"
 									/>

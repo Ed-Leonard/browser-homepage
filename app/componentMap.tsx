@@ -1,4 +1,4 @@
-import { AnyProps, Clock } from './nodes';
+import { Clock } from './nodes';
 
 export type NodePropsMap = {
 	Clock: {
@@ -27,3 +27,14 @@ export type NodeEntry = {
 		onChange?: (newProps: Partial<NodePropsMap[K]>) => void;
 	}
 }[keyof NodePropsMap];
+
+export type NodeEntryGeneric<K extends keyof NodePropsMap> = {
+	nodeName: K;
+	node: React.ComponentType<NodePropsMap[K]>;
+	props: NodePropsMap[K];
+	z: number;
+	showing: boolean;
+	x: number;
+	y: number;
+	onChange?: (newProps: Partial<NodePropsMap[K]>) => void;
+};
