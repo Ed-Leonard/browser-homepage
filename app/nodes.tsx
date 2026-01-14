@@ -1,17 +1,18 @@
 'use client';
 
 import Draggable from 'react-draggable';
-import { NodeEntry, NodeEntryGeneric, NodePropsMap } from './componentMap';
+import { NodeEntry, NodePropsMap } from './componentMap';
 import { useRef, useState, useEffect } from 'react';
 import Dialog from '@mui/material/Dialog';
 
-export type AnyProps = {
-	border?: boolean;
-	background?: boolean;
-	[key: string]: any;
+type DraggableBoxProps = NodeEntry & {
+	node: React.ComponentType<any>;
+	onClick: () => void;
+	onMove: (x: number, y: number) => void;
+	onToggleShowing: () => void;
 };
 
-export function Clock({ showSeconds = true, use24Hour = false, border = false, background = false }: AnyProps) {
+export function Clock(props: NodePropsMap["Clock"]) {
 	const [time, setTime] = useState("");
 
 	useEffect(() => {
@@ -24,7 +25,7 @@ export function Clock({ showSeconds = true, use24Hour = false, border = false, b
 
 			let suffix = "";
 
-			if (!use24Hour) {
+			if (!props.use24Hour) {
 				suffix = hours >= 12 ? " PM" : " AM";
 				hours = hours % 12 || 12;
 			}
@@ -34,7 +35,7 @@ export function Clock({ showSeconds = true, use24Hour = false, border = false, b
 			const ss = seconds.toString().padStart(2, "0");
 
 			const formatted =
-				showSeconds ? `${hh}:${mm}:${ss}${suffix}` : `${hh}:${mm}${suffix}`;
+				props.showSeconds ? `${hh}:${mm}:${ss}${suffix}` : `${hh}:${mm}${suffix}`;
 
 			setTime(formatted);
 		};
@@ -43,18 +44,35 @@ export function Clock({ showSeconds = true, use24Hour = false, border = false, b
 		const interval = setInterval(update, 1000);
 
 		return () => clearInterval(interval);
-	}, [showSeconds, use24Hour]);
+	}, [props.showSeconds, props.use24Hour]);
 
 	return (
-		<div className={`text-6xl noselect p-2 rounded-lg ${border ? 'border' : 'border-0'} ${background ? 'bg-[#3c3836]' : 'bg-transparent'}`} >
+		<div className={`text-6xl noselect p-2 rounded-lg ${props.border ? 'border' : 'border-0'} ${props.background ? 'bg-[#3c3836]' : 'bg-transparent'}`} >
 			{time}
 		</div >
 	);
 }
 
-export default function DraggableBox<K extends keyof NodePropsMap>({ nodeName, node, props, onChange, onClick, x, y, z, setNodes }: NodeEntryGeneric<K> & { onClick: () => void, setNodes: React.Dispatch<React.SetStateAction<NodeEntry[]>> }) {
+export function Test(props: NodePropsMap["Test"]) {
+	return (
+		<div className={`text-6xl noselect p-2 rounded-lg ${props.border ? 'border' : 'border-0'} ${props.background ? 'bg-[#3c3836]' : 'bg-transparent'}`} >
+			hi
+		</div >
+	)
+}
+
+export default function DraggableBox({
+	props,
+	node: Node,
+	x,
+	y,
+	z,
+	onChange,
+	onClick,
+	onMove,
+	onToggleShowing
+}: DraggableBoxProps) {
 	const nodeRef = useRef(null);
-	const Node = node;
 	const [showSettings, setShowSettings] = useState(false);
 
 	const toggleFields: Record<string, string> = {
@@ -64,24 +82,16 @@ export default function DraggableBox<K extends keyof NodePropsMap>({ nodeName, n
 		background: "Background",
 	};
 
-	const onClose = (nodeType: Partial<AnyProps>) => {
-		setNodes((prev: NodeEntry[]) =>
-			prev.map((n: NodeEntry) =>
-				n.node === nodeType ? { ...n, showing: !n.showing } : n)
-		);
-	}
-
 	return (
 		<>
-			<Draggable nodeRef={nodeRef} handle='.header' bounds='parent' onMouseDown={onClick} position={{ x, y }}
+			<Draggable
+				nodeRef={nodeRef}
+				handle='.header'
+				bounds='parent'
+				onMouseDown={onClick}
+				position={{ x, y }}
 				onStop={(_, data) => {
-					setNodes((prev: NodeEntry[]) =>
-						prev.map(n =>
-							n.nodeName === nodeName
-								? { ...n, x: data.x, y: data.y }
-								: n
-						)
-					);
+					onMove(data.x, data.y);
 				}}>
 				<div
 					ref={nodeRef}
@@ -91,7 +101,7 @@ export default function DraggableBox<K extends keyof NodePropsMap>({ nodeName, n
 						className='header opacity-0 pb-1 px-1 group-hover:opacity-100 transition-opacity flex justify-between cursor-move'
 					>
 						<button onClick={() => setShowSettings(!showSettings)} className='cursor-pointer' >settings</button>
-						<button className='cursor-pointer' onClick={() => onClose(node)}>x</button>
+						<button className='cursor-pointer' onClick={() => onToggleShowing()}>x</button>
 					</div>
 					<Node {...props} />
 				</div>
@@ -124,9 +134,9 @@ export default function DraggableBox<K extends keyof NodePropsMap>({ nodeName, n
 								>
 									<input
 										type="checkbox"
-										checked={Boolean(props[key as keyof NodePropsMap[K]])}
+										checked={Boolean(props[key as keyof typeof props])}
 										onChange={(e) =>
-											onChange?.({ [key]: e.target.checked } as Partial<NodePropsMap[K]>)
+											onChange?.({ [key]: e.target.checked } as Partial<typeof props>)
 										}
 										className="cursor-pointer mr-32 bg-[#282828] border rounded-full size-2 appearance-none checked:bg-[#ebdbb2] checked: transition-all duration-75"
 									/>

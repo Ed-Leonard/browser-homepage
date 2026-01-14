@@ -1,4 +1,4 @@
-import { Clock } from './nodes';
+import { Clock, Test } from './nodes';
 
 export type NodePropsMap = {
 	Clock: {
@@ -7,34 +7,27 @@ export type NodePropsMap = {
 		border: boolean;
 		background: boolean;
 	};
+	Test: {
+		border: boolean;
+		background: boolean;
+	}
 };
 
 export const componentMap: {
 	[K in keyof NodePropsMap]: React.ComponentType<NodePropsMap[K]>
 } = {
 	Clock,
+	Test,
 };
 
 export type NodeEntry = {
 	[K in keyof NodePropsMap]: {
 		nodeName: K;
-		node: React.ComponentType<NodePropsMap[K]>;
 		props: NodePropsMap[K];
-		z: number;
-		showing: boolean;
 		x: number;
 		y: number;
+		z: number;
+		showing: boolean;
 		onChange?: (newProps: Partial<NodePropsMap[K]>) => void;
 	}
 }[keyof NodePropsMap];
-
-export type NodeEntryGeneric<K extends keyof NodePropsMap> = {
-	nodeName: K;
-	node: React.ComponentType<NodePropsMap[K]>;
-	props: NodePropsMap[K];
-	z: number;
-	showing: boolean;
-	x: number;
-	y: number;
-	onChange?: (newProps: Partial<NodePropsMap[K]>) => void;
-};
