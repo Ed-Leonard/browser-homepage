@@ -1,4 +1,4 @@
-import { Clock, Test } from './nodes';
+import { Clock, Calendar } from './nodes';
 
 export type NodePropsMap = {
 	Clock: {
@@ -7,7 +7,7 @@ export type NodePropsMap = {
 		border: boolean;
 		background: boolean;
 	};
-	Test: {
+	Calendar: {
 		border: boolean;
 		background: boolean;
 	}
@@ -17,7 +17,7 @@ export const componentMap: {
 	[K in keyof NodePropsMap]: React.ComponentType<NodePropsMap[K]>
 } = {
 	Clock,
-	Test,
+	Calendar,
 };
 
 export type NodeEntry = {

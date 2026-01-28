@@ -5,56 +5,65 @@ import TaskBar from './taskbar'
 import { useState, useEffect } from 'react'
 import { componentMap, NodeEntry } from './componentMap'
 
-
+const DEFAULT_NODES = [
+	{
+		nodeName: 'Clock',
+		props: { showSeconds: true, use24Hour: false, border: true, background: true },
+		x: 100, y: 100, z: 1, showing: true,
+	},
+	{
+		nodeName: 'Calendar',
+		props: { border: true, background: true },
+		x: 400, y: 400, z: 2, showing: false,
+	},
+] as NodeEntry[];
 
 export default function Home() {
 	const [nodes, setNodes] = useState<NodeEntry[]>([]);
 
 	useEffect(() => {
+
 		const saved = localStorage.getItem('nodes');
+
+		let loadedNodes = DEFAULT_NODES.map(defaultNode => ({ ...defaultNode }));
+
 		if (saved) {
-			const parsed: NodeEntry[] = JSON.parse(saved);
-			const withHandlers = parsed.map((n, i) => ({
-				...n,
-				onChange: (newProps: any) => {
-					setNodes(prev =>
-						prev.map((p, j) =>
-							i === j ? { ...p, props: { ...p.props, ...newProps } } : p
-						)
-					);
-				},
-			}));
-			setNodes(withHandlers);
-		} else {
-			setNodes([
-				{
-					nodeName: 'Clock',
-					props: { showSeconds: true, use24Hour: false, border: true, background: true },
-					x: 100, y: 100, z: 1, showing: true,
-					onChange: (newProps) =>
-						setNodes(prev =>
-							prev.map(n =>
-								n.nodeName === 'Clock'
-									? { ...n, props: { ...n.props, ...newProps } }
-									: n
-							)
-						),
-				},
-				{
-					nodeName: 'Test',
-					props: { border: true, background: true },
-					x: 400, y: 400, z: 2, showing: false,
-					onChange: (newProps) =>
-						setNodes(prev =>
-							prev.map(n =>
-								n.nodeName === 'Clock'
-									? { ...n, props: { ...n.props, ...newProps } }
-									: n
-							)
-						),
-				},
-			]);
+			try {
+				const parsed: NodeEntry[] | null = JSON.parse(saved);
+
+				if (parsed) {
+					loadedNodes = DEFAULT_NODES.map(defaultNode => {
+						const savedNode = parsed.find(n => n.nodeName === defaultNode.nodeName);
+
+						if (savedNode) {
+							return {
+								...defaultNode,
+								...savedNode,
+								props: {
+									...defaultNode.props,
+									...savedNode.props,
+								},
+							};
+						}
+
+						return { ...defaultNode };
+					}) as NodeEntry[];
+				}
+			} catch (error) {
+				console.error('Failed to parse saved nodes:', error);
+			}
 		}
+
+		setNodes(loadedNodes.map((n, i) => ({
+			...n,
+			onChange: (newProps: any) => {
+				setNodes(prev =>
+					prev.map((p, j) =>
+						i === j ? { ...p, props: { ...p.props, ...newProps } } : p
+					)
+				);
+			},
+		})) as NodeEntry[]);
 	}, []);
 
 	useEffect(() => {

@@ -53,10 +53,10 @@ export function Clock(props: NodePropsMap["Clock"]) {
 	);
 }
 
-export function Test(props: NodePropsMap["Test"]) {
+export function Calendar(props: NodePropsMap["Calendar"]) {
 	return (
 		<div className={`text-6xl noselect p-2 rounded-lg ${props.border ? 'border' : 'border-0'} ${props.background ? 'bg-[#3c3836]' : 'bg-transparent'}`} >
-			hi
+			hello
 		</div >
 	)
 }
