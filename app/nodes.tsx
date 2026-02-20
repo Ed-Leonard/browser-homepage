@@ -4,6 +4,8 @@ import Draggable from 'react-draggable';
 import { NodeEntry, NodePropsMap } from './componentMap';
 import { useRef, useState, useEffect } from 'react';
 import Dialog from '@mui/material/Dialog';
+import { IlamyCalendar } from '@ilamy/calendar';
+import LeetDaily from './leet';
 
 type DraggableBoxProps = NodeEntry & {
 	node: React.ComponentType<any>;
@@ -55,8 +57,16 @@ export function Clock(props: NodePropsMap["Clock"]) {
 
 export function Calendar(props: NodePropsMap["Calendar"]) {
 	return (
-		<div className={`text-6xl noselect p-2 rounded-lg ${props.border ? 'border' : 'border-0'} ${props.background ? 'bg-[#3c3836]' : 'bg-transparent'}`} >
-			hello
+		<div className={`${props.border ? 'border' : 'border-0'} ${props.background ? 'bg-[#3c3836]' : 'bg-transparent'}`} >
+			<IlamyCalendar />
+		</div >
+	)
+}
+
+export function Leet(props: NodePropsMap["Leet"]) {
+	return (
+		<div className={`rounded-lg p-4 ${props.border ? 'border' : 'border-0'} ${props.background ? 'bg-[#3c3836]' : 'bg-transparent'}`} >
+			<LeetDaily />
 		</div >
 	)
 }

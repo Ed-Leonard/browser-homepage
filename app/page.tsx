@@ -1,6 +1,6 @@
 'use client'
 
-import DraggableBox from './nodes'
+import DraggableBox, { Leet } from './nodes'
 import TaskBar from './taskbar'
 import { useState, useEffect } from 'react'
 import { componentMap, NodeEntry } from './componentMap'
@@ -16,6 +16,11 @@ const DEFAULT_NODES = [
 		props: { border: true, background: true },
 		x: 400, y: 400, z: 2, showing: false,
 	},
+	{
+		nodeName: 'Leet',
+		props: { border: true, background: true },
+		x: 800, y: 200, z: 2, showing: true,
+	}
 ] as NodeEntry[];
 
 export default function Home() {
