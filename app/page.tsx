@@ -1,6 +1,6 @@
 'use client'
 
-import DraggableBox, { Leet } from './nodes'
+import DraggableBox from './nodes'
 import TaskBar from './taskbar'
 import { useState, useEffect } from 'react'
 import { componentMap, NodeEntry } from './componentMap'
@@ -13,13 +13,18 @@ const DEFAULT_NODES = [
 	},
 	{
 		nodeName: 'Calendar',
-		props: { border: true, background: true },
+		props: { background: true },
 		x: 400, y: 400, z: 2, showing: false,
 	},
 	{
 		nodeName: 'Leet',
 		props: { border: true, background: true },
-		x: 800, y: 200, z: 2, showing: true,
+		x: 800, y: 200, z: 3, showing: true,
+	},
+	{
+		nodeName: 'Weather',
+		props: { border: true, background: true },
+		x: 100, y: 200, z: 4, showing: true,
 	}
 ] as NodeEntry[];
 

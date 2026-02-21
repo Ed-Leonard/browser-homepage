@@ -4,8 +4,8 @@ import Draggable from 'react-draggable';
 import { NodeEntry, NodePropsMap } from './componentMap';
 import { useRef, useState, useEffect } from 'react';
 import Dialog from '@mui/material/Dialog';
-import { IlamyCalendar } from '@ilamy/calendar';
 import LeetDaily from './leet';
+import CurrentWeather from './weather';
 
 type DraggableBoxProps = NodeEntry & {
 	node: React.ComponentType<any>;
@@ -49,7 +49,7 @@ export function Clock(props: NodePropsMap["Clock"]) {
 	}, [props.showSeconds, props.use24Hour]);
 
 	return (
-		<div className={`text-6xl noselect p-2 rounded-lg ${props.border ? 'border' : 'border-0'} ${props.background ? 'bg-[#3c3836]' : 'bg-transparent'}`} >
+		<div className={`text-5xl font-mono font-extralight noselect p-2 rounded-lg ${props.border ? 'border' : 'border-0'} ${props.background ? 'bg-[#3c3836]' : 'bg-transparent'}`} >
 			{time}
 		</div >
 	);
@@ -57,16 +57,24 @@ export function Clock(props: NodePropsMap["Clock"]) {
 
 export function Calendar(props: NodePropsMap["Calendar"]) {
 	return (
-		<div className={`${props.border ? 'border' : 'border-0'} ${props.background ? 'bg-[#3c3836]' : 'bg-transparent'}`} >
-			<IlamyCalendar />
+		<div className={`p-2 rounded-lg ${props.border ? 'border' : 'border-0'} ${props.background ? 'bg-[#3c3836]' : 'bg-transparent'}`} >
+			calendar
 		</div >
 	)
 }
 
 export function Leet(props: NodePropsMap["Leet"]) {
 	return (
-		<div className={`rounded-lg p-4 ${props.border ? 'border' : 'border-0'} ${props.background ? 'bg-[#3c3836]' : 'bg-transparent'}`} >
+		<div className={`rounded-lg ${props.border ? 'border' : 'border-0'} 'bg-red-100`} >
 			<LeetDaily />
+		</div >
+	)
+}
+
+export function Weather(props: NodePropsMap["Weather"]) {
+	return (
+		<div className={`rounded-lg ${props.border ? 'border' : 'border-0'} ${props.background ? 'bg-[#3c3836]' : 'bg-transparent'}`} >
+			<CurrentWeather />
 		</div >
 	)
 }
@@ -108,7 +116,7 @@ export default function DraggableBox({
 					className={`window group absolute`}
 					style={{ zIndex: z }} >
 					<div
-						className='header opacity-0 pb-1 px-1 group-hover:opacity-100 transition-opacity flex justify-between cursor-move'
+						className='header opacity-0 pb-1 px-1 group-hover:opacity-100 transition-opacity flex justify-between cursor-pointer'
 					>
 						<button onClick={() => setShowSettings(!showSettings)} className='cursor-pointer' >settings</button>
 						<button className='cursor-pointer' onClick={() => onToggleShowing()}>x</button>

@@ -8,19 +8,18 @@ export async function GET() {
 		body: JSON.stringify({
 			query: `
         query {
-          activeDailyCodingChallengeQuestion {
-            date
-            link
-           question {
-              title
-              titleSlug
-              difficulty
-              acRate
-              topicTags {
-                name
-              }
-            }
-		  }
+			activeDailyCodingChallengeQuestion {
+				date
+				link
+				question {
+					questionId
+					title
+					difficulty
+					topicTags {
+						name
+					}
+				}
+			}
         }
       `,
 		}),

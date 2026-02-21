@@ -1,4 +1,4 @@
-import { Clock, Calendar, Leet } from './nodes';
+import { Clock, Calendar, Leet, Weather } from './nodes';
 
 export type NodePropsMap = {
 	Clock: {
@@ -13,6 +13,9 @@ export type NodePropsMap = {
 	}
 	Leet: {
 		border: boolean;
+	}
+	Weather: {
+		border: boolean;
 		background: boolean;
 	}
 };
@@ -23,6 +26,7 @@ export const componentMap: {
 	Clock,
 	Calendar,
 	Leet,
+	Weather,
 };
 
 export type NodeEntry = {
