@@ -1,4 +1,5 @@
 import { Clock, Calendar, Leet, Weather } from './nodes';
+import { fontSize } from './page';
 
 export type NodePropsMap = {
 	Clock: {
@@ -6,6 +7,7 @@ export type NodePropsMap = {
 		use24Hour: boolean;
 		border: boolean;
 		background: boolean;
+		fontSize: fontSize;
 	};
 	Calendar: {
 		border: boolean;
@@ -17,6 +19,7 @@ export type NodePropsMap = {
 	Weather: {
 		border: boolean;
 		background: boolean;
+		celsius: boolean;
 	}
 };
 

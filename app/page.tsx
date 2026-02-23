@@ -3,12 +3,25 @@
 import DraggableBox from './nodes'
 import TaskBar from './taskbar'
 import { useState, useEffect } from 'react'
-import { componentMap, NodeEntry } from './componentMap'
+import { componentMap, NodeEntry, NodePropsMap } from './componentMap'
+
+export enum fontSize {
+	sm,
+	md,
+	lg,
+	xl,
+	doublexl,
+	triplexl,
+	quadruplexl,
+	quintuplexl,
+	sextuplexl,
+}
+
 
 const DEFAULT_NODES = [
 	{
 		nodeName: 'Clock',
-		props: { showSeconds: true, use24Hour: false, border: true, background: true },
+		props: { showSeconds: true, use24Hour: false, border: true, background: true, fontSize: fontSize.quadruplexl },
 		x: 100, y: 100, z: 1, showing: true,
 	},
 	{
@@ -18,12 +31,12 @@ const DEFAULT_NODES = [
 	},
 	{
 		nodeName: 'Leet',
-		props: { border: true, background: true },
+		props: { border: true },
 		x: 800, y: 200, z: 3, showing: true,
 	},
 	{
 		nodeName: 'Weather',
-		props: { border: true, background: true },
+		props: { border: true, background: true, celsius: true },
 		x: 100, y: 200, z: 4, showing: true,
 	}
 ] as NodeEntry[];
@@ -111,6 +124,12 @@ export default function Home() {
 		);
 	};
 
+	const updateNodeProps = (index: number, updated: Partial<NodePropsMap[keyof NodePropsMap]>) => {
+		setNodes(prev => prev.map((n, i) =>
+			i === index ? { ...n, props: { ...n.props, ...updated } } as NodeEntry : n
+		));
+	};
+
 	return (
 		<div className='relative min-h-screen overflow-hidden bg-[#282828]'>
 			{nodes.map((n, i) =>
@@ -121,6 +140,7 @@ export default function Home() {
 						node={componentMap[n.nodeName]}
 						onClick={() => bringToFront(i)}
 						onMove={(x, y) => moveNode(i, x, y)}
+						onChange={(updated: Partial<NodePropsMap[keyof NodePropsMap]>) => updateNodeProps(i, updated)}
 						onToggleShowing={() => toggleNodeShowing(i)}
 					/>
 				) : null

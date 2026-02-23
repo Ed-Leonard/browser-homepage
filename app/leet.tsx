@@ -60,7 +60,7 @@ export default function LeetDaily() {
 	}
 
 	return (
-		<div className='p-2 pt-0.5 rounded-lg bg-[#3c3836]'>
+		<div className='p-2 pt-0.5 rounded-lg bg-[#3c3836] max-w-64'>
 			<div className='flex justify-center gap-4 items-center'>
 				<h1 className='text-sm font-extralight font-mono'>DAILY LEETCODE</h1>
 				<p className='text-sm font-mono font-extralight'>{formatDate(daily.date)}</p>
@@ -68,7 +68,7 @@ export default function LeetDaily() {
 			<a href={`https://leetcode.com${daily.link}`} className='block hover:border-[#b8bb26] border rounded-sm p-2' target='_blank'>
 				<h1 className='text-xl max-w-64 mb-2 font-mono font-medium'>{daily.question.questionId} - {daily.question.title}</h1>
 				<p className={`${difficultColour(daily.question.difficulty)} font-mono font-medium mb-2 text-sm`}>Difficulty: {daily.question.difficulty}</p>
-				<div className='flex gap-2'>
+				<div className='flex flex-wrap gap-2'>
 					{daily.question.topicTags.map((tag, i) =>
 						<div className='text-xs  bg-[#d3869b] text-[#3c3836] rounded-full p-1 font-mono font-medium' key={i}>{tag.name}</div>
 					)}
