@@ -1,45 +1,62 @@
-import { Clock, Calendar, Leet, Weather } from './nodes';
-import { fontSize } from './page';
+import { Clock, Leet, GoogleSearch, Weather, Shortcuts, Reddit } from "./nodes";
 
 export type NodePropsMap = {
-	Clock: {
-		showSeconds: boolean;
-		use24Hour: boolean;
-		border: boolean;
-		background: boolean;
-		fontSize: fontSize;
-	};
-	Calendar: {
-		border: boolean;
-		background: boolean;
-	}
-	Leet: {
-		border: boolean;
-	}
-	Weather: {
-		border: boolean;
-		background: boolean;
-		celsius: boolean;
-	}
+  Clock: {
+    showSeconds: boolean;
+    use24Hour: boolean;
+    border: boolean;
+    background: boolean;
+    fontSize: string;
+    shadow: string;
+  };
+  Leet: {
+    border: boolean;
+    shadow: string;
+  };
+  Weather: {
+    border: boolean;
+    background: boolean;
+    celsius: boolean;
+    fontSize: string;
+    shadow: string;
+  };
+  GoogleSearch: {
+    border: boolean;
+    background: boolean;
+    fontSize: string;
+    shadow: string;
+  };
+  Shortcuts: {
+    border: boolean;
+    background: boolean;
+    shadow: string;
+  };
+  Reddit: {
+    border: boolean;
+    background: boolean;
+    shadow: string;
+  };
 };
 
 export const componentMap: {
-	[K in keyof NodePropsMap]: React.ComponentType<NodePropsMap[K]>
+  [K in keyof NodePropsMap]: React.ComponentType<NodePropsMap[K]>;
 } = {
-	Clock,
-	Calendar,
-	Leet,
-	Weather,
+  Clock,
+  Leet,
+  Weather,
+  GoogleSearch,
+  Shortcuts,
+  Reddit,
 };
 
 export type NodeEntry = {
-	[K in keyof NodePropsMap]: {
-		nodeName: K;
-		props: NodePropsMap[K];
-		x: number;
-		y: number;
-		z: number;
-		showing: boolean;
-		onChange?: (newProps: Partial<NodePropsMap[K]>) => void;
-	}
+  [K in keyof NodePropsMap]: {
+    nodeName: K;
+    props: NodePropsMap[K];
+    x: number;
+    y: number;
+    z: number;
+    showing: boolean;
+    onChange?: (newProps: Partial<NodePropsMap[K]>) => void;
+  };
 }[keyof NodePropsMap];
