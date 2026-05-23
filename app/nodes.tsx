@@ -8,6 +8,7 @@ import LeetDaily from "./leet";
 import CurrentWeather from "./weather";
 import ShortcutsElement from "./shortcuts";
 import RedditElement from "./reddit";
+import WordOfTheDayElement from "./wordoftheday";
 
 type DraggableBoxProps = NodeEntry & {
   node: React.ComponentType<any>;
@@ -136,6 +137,16 @@ export function Reddit(props: NodePropsMap["Reddit"]) {
       className={`rounded-lg ${props.border ? "border" : "border-0"} ${props.background ? "bg-secondary" : "bg-transparent"} ${props.shadow}`}
     >
       <RedditElement />
+    </div>
+  );
+}
+
+export function WordOfTheDay(props: NodePropsMap["WordOfTheDay"]) {
+  return (
+    <div
+      className={`rounded-lg p-3 max-w-xs ${props.border ? "border" : "border-0"} ${props.background ? "bg-secondary" : "bg-transparent"} ${props.shadow} ${props.fontSize}`}
+    >
+      <WordOfTheDayElement />
     </div>
   );
 }

@@ -101,6 +101,19 @@ const DEFAULT_NODES = [
     z: 7,
     showing: true,
   },
+  {
+    nodeName: "WordOfTheDay",
+    props: {
+      border: true,
+      background: true,
+      fontSize: fontSize[4],
+      shadow: shadowSize[3],
+    },
+    x: 200,
+    y: 800,
+    z: 8,
+    showing: true,
+  },
 ] as NodeEntry[];
 
 export default function Home() {

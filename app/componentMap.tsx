@@ -1,4 +1,12 @@
-import { Clock, Leet, GoogleSearch, Weather, Shortcuts, Reddit } from "./nodes";
+import {
+  Clock,
+  Leet,
+  GoogleSearch,
+  Weather,
+  Shortcuts,
+  Reddit,
+  WordOfTheDay,
+} from "./nodes";
 
 export type NodePropsMap = {
   Clock: {
@@ -36,6 +44,12 @@ export type NodePropsMap = {
     background: boolean;
     shadow: string;
   };
+  WordOfTheDay: {
+    border: boolean;
+    background: boolean;
+    fontSize: string;
+    shadow: string;
+  };
 };
 
 export const componentMap: {
@@ -47,6 +61,7 @@ export const componentMap: {
   GoogleSearch,
   Shortcuts,
   Reddit,
+  WordOfTheDay,
 };
 
 export type NodeEntry = {
