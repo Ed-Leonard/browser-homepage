@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { format } from "date-and-time";
+import { getCached, setCached } from "../utility/cache";
 
 interface TopicTag {
   name: string;
@@ -17,7 +18,12 @@ interface Daily {
   };
 }
 
-let cache: Daily | null = null;
+function getMsUntilMidnightUTC(): number {
+  const now = new Date();
+  const midnight = new Date();
+  midnight.setUTCHours(24, 0, 0, 0);
+  return midnight.getTime() - now.getTime();
+}
 
 const formatDate = (dateString: string) => {
   const dateArray = dateString.split("-");
@@ -45,15 +51,21 @@ const formatDate = (dateString: string) => {
 };
 
 export default function LeetDaily() {
-  const [daily, setDaily] = useState<Daily | null>(cache);
-  const [loading, setLoading] = useState(cache === null);
+  const [daily, setDaily] = useState<Daily | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (cache) return;
+    const cached = getCached<Daily>("leet", getMsUntilMidnightUTC());
+    if (cached) {
+      setDaily(cached);
+      setLoading(false);
+      return;
+    }
+
     fetch("/api/leetcode")
       .then((res) => res.json())
       .then((data) => {
-        cache = data;
+        setCached("leet", data);
         setDaily(data);
         setLoading(false);
       });
@@ -74,7 +86,7 @@ export default function LeetDaily() {
   }
 
   return (
-    <div className="p-2 pt-0.5 rounded-lg bg-[#3c3836] max-w-64">
+    <div className="p-2 pt-0.5 rounded-lg bg-secondary max-w-64">
       <div className="flex justify-center gap-4 items-center">
         <h1 className="text-sm font-extralight font-mono">DAILY LEETCODE</h1>
         <p className="text-sm font-mono font-extralight">
@@ -97,7 +109,7 @@ export default function LeetDaily() {
         <div className="flex flex-wrap gap-2">
           {daily.question.topicTags.map((tag, i) => (
             <div
-              className="text-xs  bg-[#d3869b] text-[#3c3836] rounded-full p-1 font-mono font-medium"
+              className="text-xs  bg-[#d3869b] text-secondary rounded-full p-1 font-mono font-medium"
               key={i}
             >
               {tag.name}

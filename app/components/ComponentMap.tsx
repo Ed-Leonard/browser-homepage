@@ -6,7 +6,7 @@ import {
   Shortcuts,
   Reddit,
   WordOfTheDay,
-} from "./nodes";
+} from "./Nodes";
 
 export type NodePropsMap = {
   Clock: {
@@ -67,6 +67,7 @@ export const componentMap: {
 export type NodeEntry = {
   [K in keyof NodePropsMap]: {
     nodeName: K;
+    icon?: React.ReactNode;
     props: NodePropsMap[K];
     x: number;
     y: number;

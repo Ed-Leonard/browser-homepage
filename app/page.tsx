@@ -1,9 +1,21 @@
 "use client";
 
-import DraggableBox from "./nodes";
-import TaskBar from "./taskbar";
+import DraggableBox from "./components/Nodes";
+import TaskBar from "./components/Taskbar";
 import { useState, useEffect } from "react";
-import { componentMap, NodeEntry, NodePropsMap } from "./componentMap";
+import {
+  componentMap,
+  NodeEntry,
+  NodePropsMap,
+} from "./components/ComponentMap";
+import { ThemeProvider } from "./context/ThemeContext";
+import { CiSettings } from "react-icons/ci";
+import { useTheme, type Theme, type Font } from "./context/ThemeContext";
+import { Dialog } from "@mui/material";
+import { FiClock } from "react-icons/fi";
+import { FaCloudSunRain } from "react-icons/fa";
+import { IoSearchSharp, IoLink } from "react-icons/io5";
+import { LuLetterText } from "react-icons/lu";
 
 const fontSize: string[] = [
   "text-sm",
@@ -26,125 +38,143 @@ const shadowSize: string[] = [
   "shadow-2xl",
 ];
 
-const DEFAULT_NODES = [
-  {
-    nodeName: "Clock",
-    props: {
-      showSeconds: true,
-      use24Hour: false,
-      border: true,
-      background: true,
-      fontSize: fontSize[6],
-      shadow: shadowSize[3],
+const getDefaultNodes = (): NodeEntry[] =>
+  [
+    {
+      nodeName: "Clock",
+      icon: <FiClock />,
+      props: {
+        showSeconds: true,
+        use24Hour: false,
+        border: true,
+        background: true,
+        fontSize: fontSize[6],
+        shadow: shadowSize[3],
+      },
+      x: 100,
+      y: 100,
+      z: 1,
+      showing: true,
     },
-    x: 100,
-    y: 100,
-    z: 1,
-    showing: true,
-  },
-  {
-    nodeName: "Leet",
-    props: { border: true, shadow: shadowSize[3] },
-    x: 800,
-    y: 200,
-    z: 3,
-    showing: true,
-  },
-  {
-    nodeName: "Weather",
-    props: {
-      border: true,
-      background: true,
-      celsius: true,
-      fontSize: fontSize[4],
-      shadow: shadowSize[3],
+    {
+      nodeName: "Leet",
+      icon: (
+        <img
+          src={`https://favicon.im/leetcode.com?larger=true`}
+          className="w-6 h-6"
+        />
+      ),
+      props: { border: true, shadow: shadowSize[3] },
+      x: 800,
+      y: 200,
+      z: 3,
+      showing: true,
     },
-    x: 100,
-    y: 200,
-    z: 4,
-    showing: true,
-  },
-  {
-    nodeName: "GoogleSearch",
-    props: {
-      border: true,
-      background: true,
-      fontSize: fontSize[4],
-      shadow: shadowSize[3],
+    {
+      nodeName: "Weather",
+      icon: <FaCloudSunRain />,
+      props: {
+        border: true,
+        background: true,
+        celsius: true,
+        fontSize: fontSize[4],
+        shadow: shadowSize[3],
+      },
+      x: 100,
+      y: 200,
+      z: 4,
+      showing: true,
     },
-    x: 400,
-    y: 500,
-    z: 5,
-    showing: true,
-  },
-  {
-    nodeName: "Shortcuts",
-    props: {
-      border: true,
-      background: true,
-      shadow: shadowSize[3],
+    {
+      nodeName: "GoogleSearch",
+      icon: <IoSearchSharp />,
+      props: {
+        border: true,
+        background: true,
+        fontSize: fontSize[4],
+        shadow: shadowSize[3],
+      },
+      x: 400,
+      y: 500,
+      z: 5,
+      showing: true,
     },
-    x: 200,
-    y: 800,
-    z: 6,
-    showing: true,
-  },
-  {
-    nodeName: "Reddit",
-    props: {
-      border: true,
-      background: true,
-      shadow: shadowSize[3],
+    {
+      nodeName: "Shortcuts",
+      icon: <IoLink />,
+      props: {
+        border: true,
+        background: true,
+        shadow: shadowSize[3],
+      },
+      x: 200,
+      y: 800,
+      z: 6,
+      showing: true,
     },
-    x: 50,
-    y: 500,
-    z: 7,
-    showing: true,
-  },
-  {
-    nodeName: "WordOfTheDay",
-    props: {
-      border: true,
-      background: true,
-      fontSize: fontSize[4],
-      shadow: shadowSize[3],
+    {
+      nodeName: "Reddit",
+      icon: (
+        <img
+          src={`https://www.google.com/s2/favicons?domain=reddit.com&sz=64`}
+          className="w-6 h-6 "
+        />
+      ),
+      props: {
+        border: true,
+        background: true,
+        shadow: shadowSize[3],
+      },
+      x: 50,
+      y: 500,
+      z: 7,
+      showing: true,
     },
-    x: 200,
-    y: 800,
-    z: 8,
-    showing: true,
-  },
-] as NodeEntry[];
+    {
+      nodeName: "WordOfTheDay",
+      icon: <LuLetterText />,
+      props: {
+        border: true,
+        background: true,
+        fontSize: fontSize[4],
+        shadow: shadowSize[3],
+      },
+      x: 200,
+      y: 800,
+      z: 8,
+      showing: true,
+    },
+  ] as NodeEntry[];
 
 export default function Home() {
   const [nodes, setNodes] = useState<NodeEntry[]>([]);
+  const [showSettings, setShowSettings] = useState(false);
+  const { theme, setTheme, font, setFont } = useTheme();
 
   useEffect(() => {
+    const defaults = getDefaultNodes();
     const saved = localStorage.getItem("nodes");
-
-    let loadedNodes = DEFAULT_NODES.map((defaultNode) => ({ ...defaultNode }));
+    let loadedNodes = defaults.map((n) => ({ ...n }));
 
     if (saved) {
       try {
         const parsed: NodeEntry[] | null = JSON.parse(saved);
-
         if (parsed) {
-          loadedNodes = DEFAULT_NODES.map((defaultNode) => {
+          loadedNodes = defaults.map((defaultNode) => {
             const savedNode = parsed.find(
               (n) => n.nodeName === defaultNode.nodeName,
             );
-
             if (savedNode) {
               return {
                 ...defaultNode,
                 ...savedNode,
+                icon: defaultNode.icon,
                 props: {
                   ...defaultNode.props,
                   ...savedNode.props,
                 },
               };
             }
-
             return { ...defaultNode };
           }) as NodeEntry[];
         }
@@ -209,6 +239,62 @@ export default function Home() {
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-background">
+      <button
+        className="absolute top-6 right-6 text-foreground circle-button hover:rotate-90 transition-transform"
+        onClick={() => setShowSettings(!showSettings)}
+      >
+        <CiSettings />
+      </button>
+      {showSettings && (
+        <Dialog
+          open={showSettings}
+          onClose={() => setShowSettings(false)}
+          slotProps={{
+            backdrop: { sx: { backgroundColor: "rgba(0, 0, 0, 0.5)" } },
+            paper: {
+              sx: {
+                boxShadow: "none",
+                overflow: "visible",
+                backgroundColor: "var(--background)",
+                color: "var(--foreground)",
+                p: 2,
+                border: "1px solid var(--foreground)",
+                borderRadius: "0.2rem",
+              },
+            },
+          }}
+        >
+          <div className="flex flex-col gap-2 text-lg">
+            <div className="flex gap-4 justify-between">
+              <span>Theme</span>
+              <select
+                value={theme}
+                onChange={(e) => setTheme(e.target.value as Theme)}
+                className="text-center cursor-pointer"
+              >
+                <option value="dark">Dark</option>
+                <option value="light">Light</option>
+                <option value="gruvbox">Gruvbox</option>
+                <option value="silk">Silk</option>
+                <option value="jungle">Jungle</option>
+                <option value="parchment">Parchment</option>
+              </select>
+            </div>
+            <div className="flex gap-4 justify-between">
+              <span>Font</span>
+              <select
+                value={font}
+                onChange={(e) => setFont(e.target.value as Font)}
+                className="text-center cursor-pointer w-full"
+              >
+                <option value="mono">Mono</option>
+                <option value="sans">Sans</option>
+                <option value="serif">Serif</option>
+              </select>
+            </div>
+          </div>
+        </Dialog>
+      )}
       {nodes.map((n, i) =>
         n.showing ? (
           <DraggableBox

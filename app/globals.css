@@ -4,24 +4,56 @@
 @source inline("{text-sm,text-md,text-lg,text-xl,text-2xl,text-3xl,text-4xl,text-5xl,text-6xl}");
 @source inline("{bg-background,bg-foreground,bg-secondary,text-background,text-foreground,text-secondary,border-background,border-foreground,border-secondary}");
 
-:root {
+[data-theme="dark"] {
+  --background: #1d1d1d;
+  --foreground: #ffffff;
+  --secondary: #222222;
+}
+
+[data-theme="gruvbox"] {
   --background: #282828;
   --foreground: #ebdbb2;
   --secondary: #3c3836;
+}
+
+[data-theme="silk"] {
+  --background: #362c3c;
+  --foreground: #e2adf2;
+  --secondary: #44475a;
+}
+
+[data-theme="jungle"] {
+  --background: #3c2c0d;
+  --foreground: #a89f68;
+  --secondary: #2c2c0d;
+}
+
+[data-theme="parchment"] {
+  --background: #f2e8d5;
+  --foreground: #3b2f1e;
+  --secondary: #ebdbb2;
+}
+
+[data-font="mono"] body {
+  font-family: var(--font-geist-mono);
+}
+[data-font="sans"] body {
+  font-family: var(--font-geist-sans);
+}
+[data-font="serif"] body {
+  font-family: var(--font-serif);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-secondary: var(--secondary);
-  --font-mono: var(--font-geist-mono);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-  font-weight: 100;
+  font-weight: 300;
 }
 
 .noselect {
@@ -29,4 +61,10 @@ body {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+
+@layer components {
+  .circle-button {
+    @apply cursor-pointer p-2 bg-transparent rounded-full hover:bg-foreground/20;
+  }
 }

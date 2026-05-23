@@ -1,14 +1,16 @@
 "use client";
 
 import Draggable from "react-draggable";
-import { NodeEntry, NodePropsMap } from "./componentMap";
+import { NodeEntry, NodePropsMap } from "./ComponentMap";
 import { useRef, useState, useEffect } from "react";
 import Dialog from "@mui/material/Dialog";
-import LeetDaily from "./leet";
-import CurrentWeather from "./weather";
-import ShortcutsElement from "./shortcuts";
-import RedditElement from "./reddit";
-import WordOfTheDayElement from "./wordoftheday";
+import LeetDaily from "./Leet";
+import CurrentWeather from "./Weather";
+import ShortcutsElement from "./Shortcuts";
+import RedditElement from "./Reddit";
+import WordOfTheDayElement from "./WordOfTheDay";
+import { CiSettings } from "react-icons/ci";
+import { RxCross1 } from "react-icons/rx";
 
 type DraggableBoxProps = NodeEntry & {
   node: React.ComponentType<any>;
@@ -101,7 +103,7 @@ export function GoogleSearch(props: NodePropsMap["GoogleSearch"]) {
   };
   return (
     <div
-      className={`${props.fontSize} rounded-lg ${props.border ? "border" : "border-0"} ${props.background ? "bg-secondary" : "bg-transparent"} ${props.shadow} p-2 group border-foreground/40 focus-within:border-foreground transition-colors hover:border-foreground`}
+      className={`${props.fontSize} rounded-lg ${props.border ? "border" : "border-0"} ${props.background ? "bg-secondary" : "bg-transparent"} ${props.shadow} p-2 group border-foreground/40 focus-within:border-foreground focus-within:shadow-secondary/50 transition-all duration-300 hover:border-foreground`}
     >
       <form
         className="inline-flex items-center"
@@ -170,7 +172,7 @@ function EnumField({
       <span>{field.label}</span>
       <div className="gap-2 flex text-lg w-min">
         <button
-          className="cursor-pointer border-b-2 px-1 border-b-[#282828] hover:border-b-[#ebdbb2] transition-colors"
+          className="cursor-pointer border-b-2 px-1 border-b-background hover:border-b-foreground transition-colors"
           onClick={() => {
             if (idx > 0) onChange?.({ [fieldKey]: field.options[idx - 1] });
           }}
@@ -178,7 +180,7 @@ function EnumField({
           −
         </button>
         <button
-          className="cursor-pointer  border-b-2 px-1 border-b-[#282828] hover:border-b-[#ebdbb2] transition-colors"
+          className="cursor-pointer  border-b-2 px-1 border-b-background hover:border-b-foreground transition-colors"
           onClick={() => {
             if (idx < field.options.length - 1)
               onChange?.({ [fieldKey]: field.options[idx + 1] });
@@ -254,21 +256,18 @@ export default function DraggableBox({
       >
         <div
           ref={nodeRef}
-          className={`window group absolute max-w-1/2`}
+          className={`window group absolute`}
           style={{ zIndex: z }}
         >
-          <div className="header opacity-0 pb-1 px-1 group-hover:opacity-100 transition-opacity flex justify-between cursor-pointer">
+          <div className="header opacity-0 pb-1 px-1 group-hover:opacity-100 flex justify-between cursor-grab active:cursor-grabbing border-t border-transparent hover:border-foreground active:border-foreground transition-all rounded-xl">
             <button
               onClick={() => setShowSettings(!showSettings)}
-              className="cursor-pointer"
+              className="circle-button hover:rotate-90 transition-transform"
             >
-              settings
+              <CiSettings />
             </button>
-            <button
-              className="cursor-pointer"
-              onClick={() => onToggleShowing()}
-            >
-              x
+            <button className="circle-button" onClick={() => onToggleShowing()}>
+              <RxCross1 />
             </button>
           </div>
           <Node {...props} />
@@ -291,7 +290,7 @@ export default function DraggableBox({
         }}
       >
         <Draggable nodeRef={nodeRef}>
-          <div className="bg-[#282828] p-4 text-[#ebdbb2] rounded-lg border cursor-move">
+          <div className="bg-background p-4 text-foreground rounded-lg border cursor-move">
             {Object.entries(toggleFields).map(([key, field]) =>
               key in props ? (
                 field.type === "toggle" ? (
@@ -308,7 +307,7 @@ export default function DraggableBox({
                           typeof props
                         >)
                       }
-                      className="cursor-pointer bg-[#282828] border rounded-full size-2 appearance-none checked:bg-[#ebdbb2] transition-all duration-75"
+                      className="cursor-pointer bg-background border rounded-full size-2 appearance-none checked:bg-foreground transition-all duration-75"
                     />
                   </label>
                 ) : (
