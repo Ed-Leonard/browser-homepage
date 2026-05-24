@@ -31,7 +31,7 @@ export default function CurrentWeather({ celsius }: { celsius: boolean }) {
   }, []);
 
   return (
-    <div className="p-2 font-light font-mono rounded-lg">
+    <div className="p-2 rounded-lg">
       {temperature !== null
         ? `${celsius ? temperature : toFahrenheit(temperature)}${celsius ? "°C" : "°F"}`
         : ""}

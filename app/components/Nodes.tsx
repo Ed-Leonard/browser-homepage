@@ -60,7 +60,7 @@ export function Clock(props: NodePropsMap["Clock"]) {
 
   return (
     <div
-      className={`${props.fontSize} font-mono font-extralight noselect p-2 rounded-lg ${props.border ? "border" : "border-0"} ${props.background ? "bg-secondary" : "bg-transparent"} ${props.shadow}`}
+      className={`${props.fontSize} noselect p-2 rounded-lg ${props.border ? "border" : "border-0"} ${props.background ? "bg-secondary" : "bg-transparent"} ${props.shadow}`}
     >
       {time}
     </div>
@@ -89,6 +89,8 @@ export function Weather(props: NodePropsMap["Weather"]) {
 
 export function GoogleSearch(props: NodePropsMap["GoogleSearch"]) {
   const [value, setValue] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+
   const onSubmit = (e: React.FormEvent<HTMLFormElement>, value: string) => {
     e.preventDefault();
     const val = value.trim();
@@ -101,6 +103,11 @@ export function GoogleSearch(props: NodePropsMap["GoogleSearch"]) {
       : `https://www.google.com/search?q=${encodeURIComponent(val)}`;
     window.location.href = dest;
   };
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
   return (
     <div
       className={`${props.fontSize} rounded-lg ${props.border ? "border" : "border-0"} ${props.background ? "bg-secondary" : "bg-transparent"} ${props.shadow} p-2 group border-foreground/40 focus-within:border-foreground focus-within:shadow-secondary/50 transition-all duration-300 hover:border-foreground`}
@@ -110,13 +117,14 @@ export function GoogleSearch(props: NodePropsMap["GoogleSearch"]) {
         onSubmit={(e) => onSubmit(e, value)}
       >
         <input
+          ref={inputRef}
           autoComplete="url"
           type="text"
           name="q"
           placeholder="Search..."
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          className="focus:outline-none focus:ring-foreground/20 text-center focus:placeholder-transparent "
+          className="focus:outline-none focus:ring-foreground/20 text-center focus:placeholder-transparent"
         />
       </form>
     </div>

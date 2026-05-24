@@ -19,10 +19,16 @@ const ThemeContext = createContext<{
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setThemeState] = useState<Theme>(
-    () => (localStorage.getItem("theme") as Theme) ?? "gruvbox",
+    () =>
+      (typeof window !== "undefined"
+        ? (localStorage.getItem("theme") as Theme)
+        : null) ?? "gruvbox",
   );
   const [font, setFontState] = useState<Font>(
-    () => (localStorage.getItem("font") as Font) ?? "mono",
+    () =>
+      (typeof window !== "undefined"
+        ? (localStorage.getItem("font") as Font)
+        : null) ?? "mono",
   );
 
   const setTheme = (t: Theme) => {
