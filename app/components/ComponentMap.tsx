@@ -20,6 +20,7 @@ export type NodePropsMap = {
     shadow: string;
   };
   Leet: {
+    background: boolean;
     border: boolean;
     shadow: string;
   };
@@ -49,7 +50,6 @@ export type NodePropsMap = {
   WordOfTheDay: {
     border: boolean;
     background: boolean;
-    fontSize: string;
     shadow: string;
   };
   Sketchpad: {

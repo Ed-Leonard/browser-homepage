@@ -66,7 +66,7 @@ const getDefaultNodes = (): NodeEntry[] =>
           className="w-6 h-6"
         />
       ),
-      props: { border: true, shadow: shadowSize[3] },
+      props: { background: true, border: true, shadow: shadowSize[3] },
       x: 1400,
       y: 400,
       z: 3,
@@ -138,7 +138,6 @@ const getDefaultNodes = (): NodeEntry[] =>
       props: {
         border: true,
         background: true,
-        fontSize: fontSize[4],
         shadow: shadowSize[3],
       },
       x: 50,

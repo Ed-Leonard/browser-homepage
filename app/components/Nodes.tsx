@@ -70,7 +70,7 @@ export function Clock(props: NodePropsMap["Clock"]) {
 export function Leet(props: NodePropsMap["Leet"]) {
   return (
     <div
-      className={`rounded-lg ${props.border ? "border" : "border-0"} ${props.shadow}`}
+      className={`rounded-lg ${props.border ? "border" : "border-0"} ${props.shadow} ${props.background ? "bg-secondary" : "bg-transparent"}`}
     >
       <LeetDaily />
     </div>
@@ -154,7 +154,7 @@ export function HN(props: NodePropsMap["HN"]) {
 export function WordOfTheDay(props: NodePropsMap["WordOfTheDay"]) {
   return (
     <div
-      className={`rounded-lg p-3 max-w-xs ${props.border ? "border" : "border-0"} ${props.background ? "bg-secondary" : "bg-transparent"} ${props.shadow} ${props.fontSize}`}
+      className={`rounded-lg p-3 max-w-xs ${props.border ? "border" : "border-0"} ${props.background ? "bg-secondary" : "bg-transparent"} ${props.shadow}`}
     >
       <WordOfTheDayElement />
     </div>

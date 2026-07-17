@@ -86,7 +86,7 @@ export default function LeetDaily() {
   }
 
   return (
-    <div className="p-2 pt-0.5 rounded-lg bg-secondary max-w-64">
+    <div className="p-2 pt-0.5 rounded-lg max-w-64">
       <div className="flex justify-center gap-4 items-center">
         <h1 className="text-sm font-extralight font-mono">DAILY LEETCODE</h1>
         <p className="text-sm font-mono font-extralight">
