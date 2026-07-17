@@ -4,8 +4,10 @@ import {
   GoogleSearch,
   Weather,
   Shortcuts,
-  Reddit,
+  HN,
   WordOfTheDay,
+  Sketchpad,
+  Notepad,
 } from "./Nodes";
 
 export type NodePropsMap = {
@@ -39,7 +41,7 @@ export type NodePropsMap = {
     background: boolean;
     shadow: string;
   };
-  Reddit: {
+  HN: {
     border: boolean;
     background: boolean;
     shadow: string;
@@ -48,6 +50,16 @@ export type NodePropsMap = {
     border: boolean;
     background: boolean;
     fontSize: string;
+    shadow: string;
+  };
+  Sketchpad: {
+    border: boolean;
+    background: boolean;
+    shadow: string;
+  };
+  Notepad: {
+    border: boolean;
+    background: boolean;
     shadow: string;
   };
 };
@@ -60,8 +72,10 @@ export const componentMap: {
   Weather,
   GoogleSearch,
   Shortcuts,
-  Reddit,
+  HN,
   WordOfTheDay,
+  Sketchpad,
+  Notepad,
 };
 
 export type NodeEntry = {

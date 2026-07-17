@@ -16,6 +16,8 @@ import { FiClock } from "react-icons/fi";
 import { FaCloudSunRain } from "react-icons/fa";
 import { IoSearchSharp, IoLink } from "react-icons/io5";
 import { LuLetterText } from "react-icons/lu";
+import { BsPencilSquare } from "react-icons/bs";
+import { BsPencil } from "react-icons/bs";
 
 const fontSize: string[] = [
   "text-sm",
@@ -113,10 +115,10 @@ const getDefaultNodes = (): NodeEntry[] =>
       showing: true,
     },
     {
-      nodeName: "Reddit",
+      nodeName: "HN",
       icon: (
         <img
-          src={`https://www.google.com/s2/favicons?domain=reddit.com&sz=64`}
+          src={`https://www.google.com/s2/favicons?domain=news.ycombinator.com&sz=64`}
           className="w-6 h-6 "
         />
       ),
@@ -142,6 +144,32 @@ const getDefaultNodes = (): NodeEntry[] =>
       x: 200,
       y: 800,
       z: 8,
+      showing: true,
+    },
+    {
+      nodeName: "Sketchpad",
+      icon: <BsPencil />,
+      props: {
+        border: true,
+        background: true,
+        shadow: shadowSize[3],
+      },
+      x: 800,
+      y: 800,
+      z: 9,
+      showing: true,
+    },
+    {
+      nodeName: "Notepad",
+      icon: <BsPencilSquare />,
+      props: {
+        border: true,
+        background: true,
+        shadow: shadowSize[3],
+      },
+      x: 700,
+      y: 300,
+      z: 10,
       showing: true,
     },
   ] as NodeEntry[];
@@ -250,7 +278,6 @@ export default function Home() {
           open={showSettings}
           onClose={() => setShowSettings(false)}
           slotProps={{
-            backdrop: { sx: { backgroundColor: "rgba(0, 0, 0, 0.5)" } },
             paper: {
               sx: {
                 boxShadow: "none",
@@ -270,7 +297,7 @@ export default function Home() {
               <select
                 value={theme}
                 onChange={(e) => setTheme(e.target.value as Theme)}
-                className="text-center cursor-pointer"
+                className="text-center cursor-pointer hover:bg-foreground/10 rounded-sm"
               >
                 <option value="dark">Dark</option>
                 <option value="light">Light</option>
@@ -280,12 +307,13 @@ export default function Home() {
                 <option value="parchment">Parchment</option>
               </select>
             </div>
+            <hr />
             <div className="flex gap-4 justify-between">
               <span>Font</span>
               <select
                 value={font}
                 onChange={(e) => setFont(e.target.value as Font)}
-                className="text-center cursor-pointer w-full"
+                className="text-center cursor-pointer w-full hover:bg-foreground/10 rounded-sm"
               >
                 <option value="mono">Mono</option>
                 <option value="sans">Sans</option>

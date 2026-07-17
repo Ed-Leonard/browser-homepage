@@ -7,7 +7,7 @@ import Dialog from "@mui/material/Dialog";
 import LeetDaily from "./Leet";
 import CurrentWeather from "./Weather";
 import ShortcutsElement from "./Shortcuts";
-import RedditElement from "./Reddit";
+import HNElement from "./HN";
 import WordOfTheDayElement from "./WordOfTheDay";
 import { CiSettings } from "react-icons/ci";
 import { RxCross1 } from "react-icons/rx";
@@ -141,12 +141,12 @@ export function Shortcuts(props: NodePropsMap["Shortcuts"]) {
   );
 }
 
-export function Reddit(props: NodePropsMap["Reddit"]) {
+export function HN(props: NodePropsMap["HN"]) {
   return (
     <div
       className={`rounded-lg ${props.border ? "border" : "border-0"} ${props.background ? "bg-secondary" : "bg-transparent"} ${props.shadow}`}
     >
-      <RedditElement />
+      <HNElement />
     </div>
   );
 }
@@ -157,6 +157,155 @@ export function WordOfTheDay(props: NodePropsMap["WordOfTheDay"]) {
       className={`rounded-lg p-3 max-w-xs ${props.border ? "border" : "border-0"} ${props.background ? "bg-secondary" : "bg-transparent"} ${props.shadow} ${props.fontSize}`}
     >
       <WordOfTheDayElement />
+    </div>
+  );
+}
+
+export function Sketchpad(props: NodePropsMap["Sketchpad"]) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const drawingRef = useRef(false);
+  const [color, setColor] = useState("#000000");
+  const [strokeWidth, setStrokeWidth] = useState(4);
+
+  const getCtx = () => canvasRef.current?.getContext("2d") ?? null;
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const ctx = getCtx();
+    const saved = localStorage.getItem("sketch");
+    if (!canvas || !ctx || !saved) return;
+
+    const img = new Image();
+    img.onload = () => ctx.drawImage(img, 0, 0);
+    img.src = saved;
+  }, []);
+
+  useEffect(() => {
+    const stop = () => {
+      drawingRef.current = false;
+    };
+    window.addEventListener("mouseup", stop);
+    return () => window.removeEventListener("mouseup", stop);
+  }, []);
+
+  const saveSketch = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    localStorage.setItem("sketch", canvas.toDataURL("image/png"));
+  };
+
+  const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    const ctx = getCtx();
+    if (!ctx) return;
+    drawingRef.current = true;
+    ctx.strokeStyle = color;
+    ctx.lineWidth = strokeWidth;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.beginPath();
+    ctx.moveTo(e.nativeEvent.offsetX, e.nativeEvent.offsetY);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (!drawingRef.current || e.buttons !== 1) return;
+    const ctx = getCtx();
+    if (!ctx) return;
+    ctx.lineTo(e.nativeEvent.offsetX, e.nativeEvent.offsetY);
+    ctx.stroke();
+  };
+
+  const handleMouseUp = () => {
+    if (drawingRef.current) saveSketch();
+  };
+
+  const handleClear = () => {
+    const canvas = canvasRef.current;
+    const ctx = getCtx();
+    if (!canvas || !ctx) return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    localStorage.removeItem("sketch");
+  };
+
+  return (
+    <div
+      className={`rounded-lg p-3 max-w-md ${props.border ? "border" : "border-0"} ${props.background ? "bg-secondary" : "bg-transparent"} ${props.shadow}`}
+    >
+      <div className="flex items-center gap-3 mb-2">
+        <input
+          type="color"
+          value={color}
+          onChange={(e) => setColor(e.target.value)}
+        />
+        <input
+          type="range"
+          min="1"
+          max="30"
+          value={strokeWidth}
+          onChange={(e) => setStrokeWidth(Number(e.target.value))}
+        />
+        <span>{strokeWidth}px</span>
+        <button onClick={handleClear}>Clear</button>
+      </div>
+
+      <canvas
+        ref={canvasRef}
+        width="500"
+        height="400"
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+      ></canvas>
+    </div>
+  );
+}
+
+export function Notepad(props: NodePropsMap["Notepad"]) {
+  const [notes, setNotes] = useState<string[]>(
+    localStorage.getItem("notes")
+      ? JSON.parse(localStorage.getItem("notes") as string)
+      : [""],
+  );
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      localStorage.setItem("notes", JSON.stringify(notes));
+    }, 500);
+
+    return () => {
+      clearTimeout(timeout);
+      localStorage.setItem("notes", JSON.stringify(notes));
+    };
+  }, [notes]);
+
+  return (
+    <div
+      className={`rounded-lg p-3 max-w-md ${props.border ? "border" : "border-0"} ${props.background ? "bg-secondary" : "bg-transparent"} ${props.shadow}`}
+    >
+      {notes.map((n, i) => (
+        <div key={i} className="w-full inline-flex items-center my-1">
+          <textarea
+            className="w-full focus:outline-none hover:bg-foreground/10 focus:bg-foreground/10 rounded-lg p-2 focus:shadow-xl"
+            value={n}
+            onChange={(e) =>
+              setNotes((prev) =>
+                prev.map((n, j) => (j === i ? e.target.value : n)),
+              )
+            }
+          ></textarea>
+          <button
+            className="bg-secondary rounded-full p-1 ml-2 hover:bg-red-400 cursor-pointer transition-colors"
+            onClick={() => setNotes((prev) => prev.filter((_, j) => j !== i))}
+          >
+            <RxCross1 className="w-4 h-4" />
+          </button>
+        </div>
+      ))}
+      <button
+        className="cursor-pointer hover:bg-foreground/10 transition p-2 w-full text-left mt-2"
+        onClick={() => setNotes([...notes, ""])}
+      >
+        + Add note
+      </button>
     </div>
   );
 }
@@ -286,7 +435,7 @@ export default function DraggableBox({
         open={showSettings}
         onClose={() => setShowSettings(false)}
         slotProps={{
-          backdrop: { sx: { backgroundColor: "rgba(0, 0, 0, 0.5)" } },
+          backdrop: { sx: { backgroundColor: "rgba(0, 0, 0, 0.3)" } },
           paper: {
             sx: {
               boxShadow: "none",
