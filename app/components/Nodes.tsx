@@ -232,11 +232,13 @@ export function Sketchpad(props: NodePropsMap["Sketchpad"]) {
     >
       <div className="flex items-center gap-3 mb-2">
         <input
+          className="cursor-pointer"
           type="color"
           value={color}
           onChange={(e) => setColor(e.target.value)}
         />
         <input
+          className="cursor-pointer"
           type="range"
           min="1"
           max="30"
@@ -244,7 +246,9 @@ export function Sketchpad(props: NodePropsMap["Sketchpad"]) {
           onChange={(e) => setStrokeWidth(Number(e.target.value))}
         />
         <span>{strokeWidth}px</span>
-        <button onClick={handleClear}>Clear</button>
+        <button onClick={handleClear} className="cursor-pointer">
+          Clear
+        </button>
       </div>
 
       <canvas
